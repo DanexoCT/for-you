@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Una invitación especial</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: radial-gradient(circle at center, #021a0f 0%, #030303 80%);
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            /* Evita la selección de texto al jugar con el botón */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Estrellas de fondo */
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            transition: top 3s ease-in-out, left 3s ease-in-out, background-color 2s, transform 2s;
+            animation: twinkle infinite alternate;
+            will-change: transform, opacity, top, left;
+            z-index: 1;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* --- CARTA PROFESIONAL --- */
+        .card-wrapper {
+            position: relative;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.5), rgba(0, 0, 0, 0) 60%);
+            border-radius: 22px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 153, 76, 0.2);
+            z-index: 10;
+            animation: levitate 5s ease-in-out infinite;
+            transition: all 1.5s ease;
+            max-width: 420px;
+            width: 90%;
+            will-change: transform;
+        }
+
+        .card-content {
+            background: linear-gradient(145deg, rgba(4, 24, 14, 0.85), rgba(2, 10, 5, 0.95));
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 21px;
+            padding: 45px 35px;
+            text-align: center;
+            transition: all 1.5s ease;
+        }
+
+        @keyframes levitate {
+            0% {
+                transform: translateY(0px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 153, 76, 0.2);
+            }
+
+            50% {
+                transform: translateY(-12px);
+                box-shadow: 0 25px 45px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 153, 76, 0.35);
+            }
+
+            100% {
+                transform: translateY(0px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 153, 76, 0.2);
+            }
+        }
+
+        .card-content h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2em;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #aeffc2, #004b25);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+        }
+
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            margin: 20px auto 25px auto;
+            opacity: 0.7;
+        }
+
+        .card-content p {
+            font-size: 1.05em;
+            font-weight: 300;
+            line-height: 1.7;
+            margin-bottom: 35px;
+            color: #d1f2eb;
+            letter-spacing: 0.5px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        button {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            padding: 12px 26px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+            z-index: 20;
+            white-space: nowrap;
+            /* Para que el texto no se divida en pantallas muy finas */
+            text-align: center;
+        }
+
+        #btn-yes {
+            background: linear-gradient(135deg, #122e1f, #004b25);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(17, 122, 101, 0.4);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        #btn-yes:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 115, 0.4);
+            background: linear-gradient(135deg, #004b2e, rgb(11, 112, 70));
+        }
+
+        #btn-no {
+            background: rgba(255, 255, 255, 0.05);
+            color: #8fa09f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            margin: 0;
+        }
+
+        #success-message {
+            display: none;
+            animation: fadeIn 2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .butterfly {
+            position: absolute;
+            font-size: 28px;
+            pointer-events: none;
+            animation: flyUp 4s linear forwards;
+            z-index: 20;
+            will-change: transform, opacity;
+        }
+
+        @keyframes flyUp {
+            0% {
+                transform: translateY(100vh) rotate(-15deg) scale(0.5);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(40vh) rotate(15deg) scale(1.2);
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(-15deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* --- MEDIA QUERIES PARA CELULARES --- */
+        @media (max-width: 480px) {
+
+            .card-wrapper {
+                /* Esto empuja la tarjeta hacia abajo desde el centro */
+                margin-top: 100px;
+                /* Cámbialo a tu antojo (100px, 200px, etc.) */
+            }
+
+            .card-content {
+                padding: 35px 20px;
+            }
+
+            .card-content h1 {
+                font-size: 2.5em;
+            }
+
+            .card-content p {
+                font-size: 0.65em;
+                margin-bottom: 25px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            button {
+                width: 100%;
+                max-width: 250px;
+                padding: 12px 30px;
+                font-size: 0.7em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card-wrapper" id="main-card">
+        <div class="card-content" id="card-content">
+            <h1 id="title-text">
+                <span class="gradient-text">Para ti...</span>
+            </h1>
+
+            <div class="divider" id="divider"></div>
+
+            <div id="invitation-text">
+                <p><strong>Por ahí escuché que una niña muy bonita tiene muchas ganas de ir a un mariposario...</strong></p>
+
+                <p><strong>No diré nombres para no quemar mis fuentes jsjsjs</strong></p>
+
+                <p><strong>Así que decidí aprovechar esa valiosa información para invitarte este sábado. Me haría mucha ilusión
+                    pasar tiempo contigo y creo que sería el momento perfecto.</strong></p>
+
+                <p><strong>¿Qué dices? ¿Aceptas tener una cita conmigo para ir a ver mariposas juntos? ✨</strong></p>
+            </div>
+
+            <div class="buttons" id="button-container">
+                <button id="btn-yes">Sí, me encantaría</button>
+                <button id="btn-no">No creo</button>
+            </div>
+
+            <div id="success-message">
+                <h1><span class="gradient-text">¡ yeiii !</span></h1>
+                <div class="divider"></div>
+                <p><strong>Sabía que dirías que sí. Prometo que será un sábado muy bonito, tú solo ven con ganas de disfrutar y de ver muchas mariposas. ✨</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Crear el fondo de estrellas
+        const numStars = 400;
+        const body = document.querySelector('body');
+        const stars = [];
+        const fragment = document.createDocumentFragment();
+
+        function createStars() {
+            for (let i = 0; i < numStars; i++) {
+                let star = document.createElement('div');
+                star.classList.add('star');
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.left = Math.random() * 100 + 'vw';
+                let size = Math.random() * 2.5 + 0.5;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                star.style.animationDelay = (Math.random() * 3) + 's';
+
+                fragment.appendChild(star);
+                stars.push(star);
+            }
+            body.appendChild(fragment);
+        }
+        createStars();
+
+        // 2. Lógica hiper-precisa del botón "No"
+        const btnNo = document.getElementById('btn-no');
+        const btnYes = document.getElementById('btn-yes');
+
+        const frasesNo = ["¿Segura?", "Piénsalo bien", "Ay, dale al otro", "Ese no funciona", "Ups, fallaste", "Oblígame", "Coyeye", "Andili"];
+        let clickCount = 0;
+
+        function moveButton() {
+            // A. Extraemos el botón de la tarjeta y lo ponemos en el body
+            if (btnNo.parentNode !== document.body) {
+                // Al sacarlo, le quitamos el ancho del 100% que hereda del modo móvil
+                // para que solo sea tan ancho como su texto.
+                btnNo.style.width = 'auto';
+                document.body.appendChild(btnNo);
+                btnNo.style.zIndex = "999";
+            }
+
+            // B. Actualizamos el texto
+            btnNo.innerText = frasesNo[clickCount % frasesNo.length];
+            clickCount++;
+
+            // C. Forzamos recalcular tamaño
+            void btnNo.offsetWidth;
+
+            // D. Calculamos los límites 
+            const margin = 20;
+            const maxX = window.innerWidth - btnNo.offsetWidth - margin;
+            const maxY = window.innerHeight - btnNo.offsetHeight - margin;
+
+            // E. Coordenadas seguras
+            const randomX = margin + Math.random() * (maxX - margin);
+            const randomY = margin + Math.random() * (maxY - margin);
+
+            // F. Aplicamos las coordenadas
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = `${randomX}px`;
+            btnNo.style.top = `${randomY}px`;
+        }
+
+        // Eventos tanto para PC como para Celulares
+        btnNo.addEventListener('mouseover', moveButton);
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Evita clics fantasma o scroll
+            moveButton();
+        }, { passive: false }); // Mejora la respuesta táctil
+
+        // 3. Acción al presionar "Sí"
+        btnYes.addEventListener('click', () => {
+            document.getElementById('invitation-text').style.display = 'none';
+            document.getElementById('button-container').style.display = 'none';
+            document.getElementById('title-text').style.display = 'none';
+            document.getElementById('divider').style.display = 'none';
+
+            // Ocultamos el botón escurridizo
+            btnNo.style.display = 'none';
+
+            const cardWrapper = document.getElementById('main-card');
+            const cardContent = document.getElementById('card-content');
+
+            cardWrapper.style.background = 'transparent';
+            cardWrapper.style.boxShadow = 'none';
+
+            cardContent.style.background = 'transparent';
+            cardContent.style.backdropFilter = 'none';
+            cardContent.style.webkitBackdropFilter = 'none';
+            cardContent.style.border = 'none';
+
+            document.getElementById('success-message').style.display = 'block';
+
+            releaseButterflies();
+            formButterflyConstellation();
+        });
+
+        // 4. Constelación
+        function formButterflyConstellation() {
+            const centerX = window.innerWidth / 2;
+
+            // DETECTAMOS EL CELULAR: 
+            const isMobile = window.innerWidth <= 480;
+            // Si es celular, la dibujamos al 35% de la pantalla (más arriba). Si es PC, al 50% (centro).
+            const centerY = isMobile ? window.innerHeight * 0.22 : window.innerHeight / 2;
+
+            const scale = Math.min(window.innerWidth, window.innerHeight) / 11;
+
+            stars.forEach((star, index) => {
+                let t = (index / stars.length) * 24 * Math.PI;
+                let term = Math.exp(Math.cos(t)) - 2 * Math.cos(4 * t) - Math.pow(Math.sin(t / 12), 5);
+
+                let x = centerX + scale * Math.sin(t) * term;
+                let y = centerY - scale * Math.cos(t) * term;
+
+                star.style.left = `${x}px`;
+                star.style.top = `${y}px`;
+
+                star.style.backgroundColor = '#a3e4d7';
+                star.style.boxShadow = '0 0 8px #00ff88';
+                star.style.transform = 'scale(1.5)';
+            });
+        }
+
+        // 5. Mariposas
+        function releaseButterflies() {
+            for (let i = 0; i < 35; i++) {
+                setTimeout(() => {
+                    let b = document.createElement('div');
+                    b.classList.add('butterfly');
+                    b.innerText = '';
+                    b.style.left = Math.random() * 100 + 'vw';
+                    b.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                    body.appendChild(b);
+
+                    setTimeout(() => { b.remove(); }, 5000);
+                }, i * 120);
+            }
+        }
+    </script>
+</body>
+
+</html>
